@@ -3,30 +3,37 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "template_package"
+name = "pyatari"
+description = "Python tools for working with Atari BASIC"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
 authors = [{name = "jmcb", email = "joelsgp@protonmail.com"}]
 keywords = []
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Natural Language :: English",
+    "Programming Language :: Basic",
+    "Programming Language :: Python :: 3",
+    "Topic :: File Formats",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+    "Typing :: Typed",
 ]
 dependencies = []
 optional-dependencies = []
 dynamic = ["version"]
 
 [project.urls]
-Home = "https://github.com/joelsgp/uoy-assessment-uploader"
+Home = "https://github.com/joelsgp/pyatari"
 
 [project.scripts]
-template-package = "template_package:main"
+pyatari = "pyatari:main"
 
 [tool.isort]
 profile = "black"
 
 [tool.setuptools.dynamic]
-version = {attr = "template_package.__version__"}
+version = {attr = "pyatari.__version__"}

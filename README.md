@@ -14,6 +14,7 @@ References:
 - https://www.atariarchives.org/dere/chapt10.php
 - https://en.wikipedia.org/wiki/Atari_BASIC
 - https://en.wikipedia.org/wiki/ATASCII
+- http://justsolve.archiveteam.org/wiki/Atari_BASIC_tokenized_file
 
 Relevant searches to check this doesn't already exist:
 - https://pypi.org/search/?q=atari

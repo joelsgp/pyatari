@@ -1,5 +1,4 @@
-# for i in range(56):
-#     print(f'    (0x{i:0>2X}, "", ""),')
+# value, symbol, arbitrary ID
 TOKENS_COMMANDS = (
     (0x00, "REM", "REM_COMMENT"),
     (0x01, "DATA", "DATA_LITERAL"),

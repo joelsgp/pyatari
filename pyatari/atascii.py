@@ -2,7 +2,7 @@ import codecs
 from enum import IntEnum
 
 
-def make_decoding_table(european: bool = False) -> tuple[str]:
+def make_decoding_table(european: bool = False) -> str:
     # making an encoding that preserves inverse characters
     # (e.g. by prefixing each one with an escape sequence like \d)
     # would require a full custom Codec implementation
@@ -14,7 +14,7 @@ def make_decoding_table(european: bool = False) -> tuple[str]:
 
     table[0x9B] = "\n"
 
-    return tuple(table)
+    return "".join(table)
 
 
 # this is somewhat undocumented, see here for example:
@@ -84,7 +84,8 @@ class ControlChar(IntEnum):
     INSERT_CHARACTER = 0xFF
 
 
-ATASCII: tuple[tuple[int, str, str], ...] = (
+# code points, normal character, european character
+ATASCII = (
     (0x00, "♥", "á"),
     (0x01, "├", "ù"),
     (0x02, "🮇", "Ñ"),

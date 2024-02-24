@@ -19,6 +19,9 @@ def make_decoding_table(european: bool = False) -> tuple[str]:
 
 # this is somewhat undocumented, see here for example:
 # https://github.com/python/cpython/blob/main/Lib/encodings/cp1252.py
+# see also here:
+# https://github.com/python/cpython/blob/main/Lib/codecs.py
+# https://docs.python.org/3/library/codecs.html
 decoding_table = make_decoding_table()
 encoding_table = codecs.charmap_build(decoding_table)
 

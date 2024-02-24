@@ -1,7 +1,7 @@
 import string
 
 import pyparsing
-from pyparsing import Char, Keyword, Word, Opt
+from pyparsing import Char, Keyword, Opt, Word
 
 PLUS_BINARY_ADDITION = Char("+")
 MINUS_BINARY_SUBTRACTION = Char("-")
@@ -23,14 +23,12 @@ AND_BOOLEAN_AND = Keyword("AND")
 OR_BOOLEAN_OR = Keyword("OR")
 
 # Logical operator
-LOP = (
-    NOT_BOOLEAN_NOT
-    | AND_BOOLEAN_AND
-    | OR_BOOLEAN_OR
-)
+LOP = NOT_BOOLEAN_NOT | AND_BOOLEAN_AND | OR_BOOLEAN_OR
 
 # Variable name
-VARNAME = Word(string.ascii_uppercase, string.ascii_uppercase + string.digits, min=1, max=120)
+VARNAME = Word(
+    string.ascii_uppercase, string.ascii_uppercase + string.digits, min=1, max=120
+)
 # Arithmetic variable
 AVAR = VARNAME
 # String variable

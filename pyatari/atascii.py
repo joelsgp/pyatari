@@ -1,4 +1,64 @@
+import codecs
 from enum import IntEnum
+
+
+def make_decoding_table(european: bool = False) -> tuple[str]:
+    # making an encoding that preserves inverse characters
+    # (e.g. by prefixing each one with an escape sequence like \d)
+    # would require a full custom Codec implementation
+    if european:
+        table = [c[2] if c[2] else c[1] for c in ATASCII]
+    else:
+        table = [c[1] for c in ATASCII]
+    table.extend(table)
+
+    table[0x9B] = "\n"
+
+    return tuple(table)
+
+
+# this is somewhat undocumented, see here for example:
+# https://github.com/python/cpython/blob/main/Lib/encodings/cp1252.py
+decoding_table = make_decoding_table()
+encoding_table = codecs.charmap_build(decoding_table)
+
+
+class Codec(codecs.Codec):
+    def encode(self, input, errors="strict"):
+        return codecs.charmap_encode(input, errors, encoding_table)
+
+    def decode(self, input, errors="strict"):
+        return codecs.charmap_decode(input, errors, decoding_table)
+
+
+class IncrementalEncoder(codecs.IncrementalEncoder):
+    def encode(self, input, final=False):
+        return codecs.charmap_encode(input, self.errors, encoding_table)[0]
+
+
+class IncrementalDecoder(codecs.IncrementalDecoder):
+    def decode(self, input, final=False):
+        return codecs.charmap_decode(input, self.errors, decoding_table)[0]
+
+
+class StreamWriter(Codec, codecs.StreamWriter):
+    pass
+
+
+class StreamReader(Codec, codecs.StreamReader):
+    pass
+
+
+def getregentry():
+    return codecs.CodecInfo(
+        name="atascii",
+        encode=Codec().encode,
+        decode=Codec().decode,
+        incrementalencoder=IncrementalEncoder,
+        incrementaldecoder=IncrementalDecoder,
+        streamreader=StreamReader,
+        streamwriter=StreamWriter,
+    )
 
 
 class ControlChar(IntEnum):
@@ -21,7 +81,7 @@ class ControlChar(IntEnum):
     INSERT_CHARACTER = 0xFF
 
 
-ATASCII = (
+ATASCII: tuple[tuple[int, str, str], ...] = (
     (0x00, "♥", "á"),
     (0x01, "├", "ù"),
     (0x02, "🮇", "Ñ"),

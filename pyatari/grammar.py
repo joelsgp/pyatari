@@ -1,7 +1,7 @@
 import string
 
 import pyparsing
-from pyparsing import Forward, Keyword, Literal, Opt, Word
+from pyparsing import Forward, Keyword, Literal, OneOrMore, Opt, Word, ZeroOrMore
 
 # Operators
 # In precedence order
@@ -73,7 +73,7 @@ CONSTANT = Word(string.digits) + Opt("." + Opt(Word(string.digits)))
 STRING = pyparsing.QuotedString(quote_char='"')
 
 # Arithmetic expression
-AEXP = AVAR | CONSTANT
+AEXP = Forward()
 
 # Atari Basic Reference Manual, Page 10, "Operator Precedence"
 # https://www.atarimania.com/documents/Atari-Basic-Reference-Manual-Rev-C.pdf
@@ -106,3 +106,23 @@ FACTOR = Forward()
 POWER <<= (POWER + CARET_EXPONENT + FACTOR) | FACTOR
 
 FACTOR <<= (MINUS_UNARY_NEGATIVE + AEXP) | AEXP
+
+AINDEX = AVAR + "(" + AEXP + ")"
+MINDEX = AVAR + "(" + AEXP + ")" + "(" + AEXP + ")"  # M'index
+SINDIX = SVAR + "(" + AEXP + ")"
+
+AFUNC = Keyword("ABS") + "(" + AEXP + ")"
+
+GROUP = "(" + AEXP + ")"
+
+AEXP <<= CONSTANT | AVAR | AINDEX | MINDEX | AFUNC | GROUP | FACTOR
+
+COMMAND = Keyword("PRINT")
+
+STATEMENT = COMMAND + AEXP
+
+STATEMENTS = STATEMENT + ZeroOrMore(":" + STATEMENT)
+
+LINE = STATEMENTS + "\n"
+LINE_DEFERRED = LINENO + LINE
+LISTING = OneOrMore(LINE_DEFERRED)

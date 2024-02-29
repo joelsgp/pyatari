@@ -1,3 +1,6 @@
+# De Re Atari, Chapter 10
+# https://www.atariarchives.org/dere/chapt10.php
+
 # value, symbol, arbitrary ID
 TOKENS_COMMANDS = (
     (0x00, "REM", "REM_COMMENT"),

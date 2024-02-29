@@ -1,7 +1,19 @@
 import string
 
 import pyparsing
-from pyparsing import Forward, Keyword, Literal, OneOrMore, Opt, Word, ZeroOrMore
+from pyparsing import (
+    Combine,
+    Forward,
+    Keyword,
+    Literal,
+    OneOrMore,
+    Opt,
+    ParserElement,
+    Word,
+    ZeroOrMore,
+)
+
+ParserElement.set_default_whitespace_chars(" \t")
 
 # Operators
 # In precedence order
@@ -69,7 +81,7 @@ VAR = AVAR | SVAR | MVAR
 
 LINENO = Word(string.digits)
 
-CONSTANT = Word(string.digits) + Opt("." + Opt(Word(string.digits)))
+CONSTANT = Combine(Word(string.digits) + Opt("." + Opt(Word(string.digits))))
 STRING = pyparsing.QuotedString(quote_char='"')
 
 # Arithmetic expression
@@ -107,6 +119,7 @@ POWER <<= (POWER + CARET_EXPONENT + FACTOR) | FACTOR
 
 FACTOR <<= (MINUS_UNARY_NEGATIVE + AEXP) | AEXP
 
+# AINDEX = Combine(AVAR + "(") + AEXP + ")"
 AINDEX = AVAR + "(" + AEXP + ")"
 MINDEX = AVAR + "(" + AEXP + ")" + "(" + AEXP + ")"  # M'index
 SINDIX = SVAR + "(" + AEXP + ")"
@@ -115,7 +128,7 @@ AFUNC = Keyword("ABS") + "(" + AEXP + ")"
 
 GROUP = "(" + AEXP + ")"
 
-AEXP <<= CONSTANT | AVAR | AINDEX | MINDEX | AFUNC | GROUP | FACTOR
+AEXP <<= CONSTANT | AFUNC | AVAR | AINDEX | MINDEX | GROUP | FACTOR
 
 COMMAND = Keyword("PRINT")
 
@@ -125,4 +138,6 @@ STATEMENTS = STATEMENT + ZeroOrMore(":" + STATEMENT)
 
 LINE = STATEMENTS + "\n"
 LINE_DEFERRED = LINENO + LINE
-LISTING = OneOrMore(LINE_DEFERRED)
+# LISTING = OneOrMore(LINE_DEFERRED)
+LISTING = LINE_DEFERRED * 1
+# LISTING.set_debug(True)

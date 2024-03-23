@@ -6,7 +6,6 @@ from pyparsing import (
     Forward,
     Keyword,
     Literal,
-    OneOrMore,
     Opt,
     ParserElement,
     Word,
@@ -117,18 +116,24 @@ TERM <<= (
 FACTOR = Forward()
 POWER <<= (POWER + CARET_EXPONENT + FACTOR) | FACTOR
 
-FACTOR <<= (MINUS_UNARY_NEGATIVE + AEXP) | AEXP
+PRIMARY = Forward()
+FACTOR <<= (MINUS_UNARY_NEGATIVE + PRIMARY) | PRIMARY
 
 # AINDEX = Combine(AVAR + "(") + AEXP + ")"
 AINDEX = AVAR + "(" + AEXP + ")"
 MINDEX = AVAR + "(" + AEXP + ")" + "(" + AEXP + ")"  # M'index
-SINDIX = SVAR + "(" + AEXP + ")"
+SINDEX = SVAR + "(" + AEXP + ")"
 
 AFUNC = Keyword("ABS") + "(" + AEXP + ")"
 
+ATOM = Forward()
+PRIMARY <<= AFUNC | MINDEX | AINDEX | ATOM
+
 GROUP = "(" + AEXP + ")"
 
-AEXP <<= CONSTANT | AFUNC | AVAR | AINDEX | MINDEX | GROUP | FACTOR
+ATOM <<= AVAR | CONSTANT | GROUP
+
+AEXP <<= DISJUNCTION
 
 COMMAND = Keyword("PRINT")
 
@@ -139,5 +144,5 @@ STATEMENTS = STATEMENT + ZeroOrMore(":" + STATEMENT)
 LINE = STATEMENTS + "\n"
 LINE_DEFERRED = LINENO + LINE
 # LISTING = OneOrMore(LINE_DEFERRED)
-LISTING = LINE_DEFERRED * 1
+LISTING = ZeroOrMore(LINE_DEFERRED)
 # LISTING.set_debug(True)

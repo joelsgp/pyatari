@@ -5,7 +5,7 @@ import grammar
 
 def main():
     filename = argv[1]
-    tokens = grammar.LISTING.parse_file(filename)
+    tokens = grammar.LISTING.parse_file(filename, parse_all=True)
     print(tokens)
 
 
